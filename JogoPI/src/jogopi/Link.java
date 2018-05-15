@@ -60,6 +60,10 @@ public class Link {
         if (!up && !down) {
             ya = 0;
         }
+        
+        if (vida == 0) {
+            jogo.gameOver();
+        }
 
         if (collision()) {
             if (!dano) {
@@ -70,9 +74,6 @@ public class Link {
             dano = false;
         }
 
-        if (vida == 0) {
-            jogo.gameOver();
-        }
 
 //        if (y+ya > jogo.getHeight() - 50){
 //            jogo.gameOver();
