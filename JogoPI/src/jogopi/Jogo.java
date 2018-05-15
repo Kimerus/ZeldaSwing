@@ -9,7 +9,6 @@ import javax.swing.*;
 public class Jogo extends JPanel implements KeyListener {
 
     private char pause = 'j';
-    //int tick = 0;
     Link link = new Link(this);
 
     public Jogo() {
@@ -34,18 +33,13 @@ public class Jogo extends JPanel implements KeyListener {
     }
 
     public void gameOver() {
-        //FAzer delay para sumir o ultimo quadrado de vida
-//        int delay=-1;
-//        if (delay != tick){
-//            delay = tick;
-//        }
         JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.YES_NO_OPTION);
         System.exit(ABORT);
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        // Sem impressao.
+        
         switch (e.getKeyChar()) {
             case 'p':
                 if (pause == 'p') {

@@ -35,7 +35,7 @@ public class Link {
     }
 
     public void move() {
-        System.out.println("up:" + up + " down:" + down + " left:" + left + " right:" + right);
+        //System.out.println("up:" + up + " down:" + down + " left:" + left + " right:" + right);
 
         if (right) {
             this.xa = 2;
