@@ -4,13 +4,21 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class Jogo extends JPanel implements KeyListener {
 
     private char pause = 'j';
     Link link = new Link(this);
-
+    private BufferedImage spriteVida, spriteFlecha, spriteBomba;
+    private JLabel vidaHUD, bombaHUD, flechaHUD;
+    private final String programPath = System.getProperty("user.dir");   //caminho do programa
+    private final String imgPath = programPath+"\\src\\img\\";   //pasta das imagens
+    
     public Jogo() {
         JFrame frame = new JFrame("Mini Tennis");
         frame.add(this);
@@ -21,6 +29,13 @@ public class Jogo extends JPanel implements KeyListener {
         this.setBackground(Color.black);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener((KeyListener) this);
+        
+        vidaHUD = new JLabel();
+        bombaHUD = new JLabel();
+        flechaHUD = new JLabel();
+        frame.getContentPane().add(vidaHUD, BorderLayout.PAGE_START);
+        frame.getContentPane().add(bombaHUD, BorderLayout.NORTH);
+        frame.getContentPane().add(flechaHUD, BorderLayout.LINE_END);
     }
 
     @Override
@@ -96,31 +111,12 @@ public class Jogo extends JPanel implements KeyListener {
         link.paint(g2d);
         g2d.setColor(Color.pink);
         g2d.fillRect(790, 2, 1, 596);
-        switch (link.vida) {
-//            case 0:
-//                this.gameOver();
-//                break;
-            case 1:
-                g2d.setColor(Color.red);
-                g2d.fillRect(15, 5, 10, 10);
-                break;
-            case 2:
-                g2d.setColor(Color.red);
-                g2d.fillRect(15, 5, 10, 10);
-                g2d.fillRect(30, 5, 10, 10);
-                break;
-            case 3:
-                g2d.setColor(Color.red);
-                g2d.fillRect(15, 5, 10, 10);
-                g2d.fillRect(30, 5, 10, 10);
-                g2d.fillRect(45, 5, 10, 10);
-                break;
-        }
         if (pause == 'p') {
             g2d.setColor(Color.blue);
             g2d.fillRect(this.getWidth() - 15, 5, 10, 30);
             g2d.fillRect(this.getWidth() - 30, 5, 10, 30);
         }
+        HUD(g);
     }
 
     public void run() {
@@ -135,6 +131,7 @@ public class Jogo extends JPanel implements KeyListener {
                 }
             } else if (pause == 'j') {
                 this.move();
+                //this.HUD();
                 this.repaint();
                 try {
                     Thread.sleep(10);
@@ -143,5 +140,67 @@ public class Jogo extends JPanel implements KeyListener {
             }
         }
     }
-
+    
+    public BufferedImage SpriteUpdate(String Sprite) {
+       BufferedImage img = null;
+        try {                
+          img = ImageIO.read(new File(Sprite));
+       } catch (IOException ex) {
+            System.out.println("ERRO, Imagem: (" + Sprite + ") Nao encontrada");
+       }
+        
+        return img;
+    }
+    
+    public void HUD(Graphics g){
+        
+        switch (link.vida) {
+            case 0:
+                spriteVida = SpriteUpdate(imgPath + "heart_0.png");   //atualiza o sprite
+                g.drawImage(spriteVida, 0, 0, this);
+                break;
+            case 1:
+                spriteVida = SpriteUpdate(imgPath + "heart_1.png");   //atualiza o sprite
+                g.drawImage(spriteVida, 0, 0, this);
+                break;
+            case 2:
+                spriteVida = SpriteUpdate(imgPath + "heart_2.png");   //atualiza o sprite
+                g.drawImage(spriteVida, 0, 0, this);
+                break;
+            case 3:
+                spriteVida = SpriteUpdate(imgPath + "heart_3.png");   //atualiza o sprite
+                g.drawImage(spriteVida, 0, 0, this);
+                break;
+        }
+        
+        switch(link.bombas){
+            case -1:    //Não equipado
+                spriteBomba = SpriteUpdate(imgPath + "bomb_-1.png");   //atualiza o sprite
+                g.drawImage(spriteBomba, this.getWidth()-150, 0, this);
+                break;
+            case 0:     //Equipado mas sem bombas
+                spriteBomba = SpriteUpdate(imgPath + "bomb_0.png");   //atualiza o sprite
+                g.drawImage(spriteBomba, this.getWidth()-150, 0, this);
+                break;
+            default:    //equipado com bombas > 0
+                spriteBomba = SpriteUpdate(imgPath + "bomb_1.png");   //atualiza o sprite
+                g.drawImage(spriteBomba, this.getWidth()-150, 0, this);
+                break;
+        }
+        
+        switch(link.flechas){
+            case -2:    //bumerangue
+                spriteFlecha = SpriteUpdate(imgPath + "arrow_1.png");
+                g.drawImage(spriteFlecha, this.getWidth()/2, 0, this);
+                break;
+            case -1:     //nao equipado
+                spriteFlecha = SpriteUpdate(imgPath + "arrow_-1.png");
+                g.drawImage(spriteFlecha, this.getWidth()/2, 0, this);
+                break;
+            default:
+                spriteFlecha = SpriteUpdate(imgPath + "arrow_1.png");
+                g.drawImage(spriteFlecha, this.getWidth()/2, 0, this);
+                break;
+        }
+    }
 }

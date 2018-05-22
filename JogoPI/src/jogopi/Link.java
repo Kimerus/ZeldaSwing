@@ -14,6 +14,8 @@ public class Link {
     int xa = 0;
     int ya = 0;
     int vida = 3;
+    int bombas = -1;
+    int flechas = -1;
     boolean up = false,
             down = false,
             left = false,
