@@ -14,7 +14,7 @@ public class Jogo extends JPanel implements KeyListener {
 
     Link link = new Link(this);
     Boomer mobBoomer = new Boomer(this);
-    private char pause = 'j';
+    private char pause = 'm', menuSelect = 'p';
     private BufferedImage spriteVida, spriteFlecha, spriteBomba;
     private JLabel vidaHUD, bombaHUD, flechaHUD;
     private final String programPath = System.getProperty("user.dir");   //caminho do programa
@@ -46,13 +46,12 @@ public class Jogo extends JPanel implements KeyListener {
 
     public void gameOver() {
         JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.YES_NO_OPTION);
-        System.exit(ABORT);
+        System.exit(0);
     }
-    
+
 //    public Rectangle getBounds() {
 //        return new Rectangle(mobBoomer.x, mobBoomer.y, 40, 40);
 //    }
-    
     public boolean collision() {
         return mobBoomer.getBounds().intersects(link.getBounds());
     }
@@ -68,6 +67,16 @@ public class Jogo extends JPanel implements KeyListener {
                     pause = 'p';
                 }
                 break;
+            case 'l':
+                if (menuSelect == 'p') {
+                    pause = 'j';
+                } else if (menuSelect == 'e') {
+                    System.exit(0);
+                }
+                break;
+            case 'm':
+                System.exit(0);
+                break;
         }
     }
 
@@ -75,10 +84,32 @@ public class Jogo extends JPanel implements KeyListener {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyChar()) {
             case 's':
-                this.link.down = true;
+                if (pause == 'j') {
+                    this.link.down = true;
+                } else if (pause == 'm') {
+                    switch (menuSelect) {
+                        case 'p':
+                            menuSelect = 'e';
+                            break;
+                        case 'e':
+                            menuSelect = 'p';
+                            break;
+                    }
+                }
                 break;
             case 'w':
-                this.link.up = true;
+                if (pause == 'j') {
+                    this.link.up = true;
+                } else if (pause == 'm') {
+                    switch (menuSelect) {
+                        case 'p':
+                            menuSelect = 'e';
+                            break;
+                        case 'e':
+                            menuSelect = 'p';
+                            break;
+                    }
+                }
                 break;
             case 'd':
                 this.link.right = true;
@@ -87,7 +118,6 @@ public class Jogo extends JPanel implements KeyListener {
                 this.link.left = true;
                 break;
         }
-
     }
 
     @Override
@@ -113,31 +143,71 @@ public class Jogo extends JPanel implements KeyListener {
         super.paint(g);
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        link.paint(g2d);
-        if (mobBoomer.vidaB > 0) {
-            mobBoomer.paint(g2d);
-        }
-        if (pause == 'p') {
+        if (pause == 'j') {
+            link.paint(g2d);
+            if (mobBoomer.vidaB > 0) {
+                mobBoomer.paint(g2d);
+            }
+            HUD(g);
+        } else if (pause == 'p') {
+            link.paint(g2d);
+            if (mobBoomer.vidaB > 0) {
+                mobBoomer.paint(g2d);
+            }
+            HUD(g);
             g2d.setColor(Color.blue);
             g2d.fillRect(this.getWidth() - 15, 5, 10, 30);
             g2d.fillRect(this.getWidth() - 30, 5, 10, 30);
+        } else if (pause == 'm') {
+            Font fnt = new Font("arial", Font.ITALIC, 90);
+            g.setFont(fnt);
+            g.setColor(Color.GREEN);
+            g.drawString("Zelda", 290, 180);
+
+            fnt = new Font("arial", 1, 30);
+            g.setFont(fnt);
+            g.setColor(Color.BLUE);
+            g.drawString("Play", 375, 330);
+            g2d.setColor(Color.white);
+            g.drawRect(290, 300, 227, 40);
+
+            g.setColor(Color.RED);
+            g.drawString("Exit", 380, 470);
+            g2d.setColor(Color.white);
+            g.drawRect(290, 440, 227, 40);
+
+            switch (menuSelect) {
+                case 'p':
+                    g2d.setColor(Color.white);
+                    g2d.fillArc(270, 305, 30, 30, 135, 90);
+                    break;
+                case 'e':
+                    g2d.setColor(Color.white);
+                    g2d.fillArc(270, 445, 30, 30, 135, 90);
+                    break;
+            }
         }
-        HUD(g);
     }
 
     public void run() {
         while (true) {
             //tick++;
             //switch (pause): 
-            if (pause == 'p') {
+            if (pause == 'j') {
+                this.move();
                 this.repaint();
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException ex) {
                 }
-            } else if (pause == 'j') {
-                this.move();
+            } else if (pause == 'p') {
                 //this.HUD();
+                this.repaint();
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ex) {
+                }
+            } else if (pause == 'm') {
                 this.repaint();
                 try {
                     Thread.sleep(10);
