@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Jogo extends JPanel implements KeyListener {
@@ -20,7 +21,11 @@ public class Jogo extends JPanel implements KeyListener {
     private final String imgPath = programPath + "\\src\\img\\";   //pasta das imagens
     private int pauseSelect = 0;
 
-    public Jogo() {
+    // Level
+    Level lvl;
+    ArrayList<Rectangle> walls = new ArrayList<>();
+    
+    public Jogo() throws IOException {
         JFrame frame = new JFrame("Mini Tennis");
         frame.add(this);
         frame.setSize(800, 625);
@@ -31,6 +36,8 @@ public class Jogo extends JPanel implements KeyListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.addKeyListener((KeyListener) this);
 
+        this.lvl = new Level(this, "mapa.txt");
+        
         vidaHUD = new JLabel();
         bombaHUD = new JLabel();
         flechaHUD = new JLabel();
