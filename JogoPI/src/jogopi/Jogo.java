@@ -49,12 +49,12 @@ public class Jogo extends JPanel implements KeyListener {
         System.exit(ABORT);
     }
     
-    public Rectangle getBounds() {
-        return new Rectangle(mobBoomer.x, mobBoomer.y, 40, 40);
-    }
+//    public Rectangle getBounds() {
+//        return new Rectangle(mobBoomer.x, mobBoomer.y, 40, 40);
+//    }
     
     public boolean collision() {
-        return this.getBounds().intersects(link.getBounds());
+        return mobBoomer.getBounds().intersects(link.getBounds());
     }
 
     @Override
