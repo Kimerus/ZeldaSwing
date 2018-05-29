@@ -22,6 +22,7 @@ public class Link {
             right = false,
             dano = false;
     Jogo jogo;
+    Boomer boomer;
 
     public Link(Jogo jogo) {
         this.jogo = jogo;
@@ -37,8 +38,6 @@ public class Link {
     }
 
     public void move() {
-        //System.out.println("up:" + up + " down:" + down + " left:" + left + " right:" + right);
-
         if (right) {
             this.xa = 2;
         }
@@ -70,23 +69,19 @@ public class Link {
         if (collision()) {
             if (!dano) {
                 vida--;
+                boomer.vidaB--;
                 dano = true;
             }
         }else{
             dano = false;
         }
-
-
-//        if (y+ya > jogo.getHeight() - 50){
-//            jogo.gameOver();
-//        }
         x += xa;
         y += ya;
 
     }
 
     private boolean collision() {
-        return this.getBounds().intersects(jogo.getBounds());
+        return this.getBounds().intersects(boomer.getBounds());
     }
 
 }
