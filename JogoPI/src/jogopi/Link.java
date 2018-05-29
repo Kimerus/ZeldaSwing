@@ -22,7 +22,6 @@ public class Link {
             right = false,
             dano = false;
     Jogo jogo;
-    Boomer boomer;
 
     public Link(Jogo jogo) {
         this.jogo = jogo;
@@ -61,27 +60,23 @@ public class Link {
         if (!up && !down) {
             ya = 0;
         }
-        
+
         if (vida == 0) {
             jogo.gameOver();
         }
 
-        if (collision()) {
+        if (jogo.collision()) {
             if (!dano) {
                 vida--;
-                boomer.vidaB--;
                 dano = true;
             }
-        }else{
+        } else {
             dano = false;
         }
+
         x += xa;
         y += ya;
 
-    }
-
-    private boolean collision() {
-        return this.getBounds().intersects(boomer.getBounds());
     }
 
 }

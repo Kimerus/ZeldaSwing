@@ -48,6 +48,14 @@ public class Jogo extends JPanel implements KeyListener {
         JOptionPane.showMessageDialog(this, "Game Over", "Game Over", JOptionPane.YES_NO_OPTION);
         System.exit(ABORT);
     }
+    
+    public Rectangle getBounds() {
+        return new Rectangle(mobBoomer.x, mobBoomer.y, 40, 40);
+    }
+    
+    public boolean collision() {
+        return this.getBounds().intersects(link.getBounds());
+    }
 
     @Override
     public void keyTyped(KeyEvent e) {

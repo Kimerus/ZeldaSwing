@@ -18,7 +18,6 @@ public class Boomer{
     int ya = 1;
     int vidaB = 1;
     boolean dano;
-    Link link;
     Jogo jogo;
 
     public Boomer(Jogo jogo) {
@@ -47,21 +46,11 @@ public class Boomer{
         if (y + ya > jogo.getHeight() - 40) {
             ya = -1;
         }
-//        if (teste()) {
-//            if (!dano) {
-//                vidaB--;
-//                dano = true;
-//            }
-//        }else{
-//            dano = false;
-//        }
+        if (jogo.collision()) {
+            vidaB--;
+        }
         x = x + xa;
         y = y + ya;
 
     }
-    
-//    private boolean teste() {
-//        return link.getBounds().intersects(getBounds());
-//    }
-
 }
