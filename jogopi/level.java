@@ -30,7 +30,6 @@ public class level
    {
       AlfaNumInit();
       String linha, temp[];
-      int t0 = 0;
 
       this.Nome = area;
       
@@ -45,20 +44,20 @@ public class level
             case "FF":
                String direc = temp[ 1 ];
                String t1[] = temp[ 2 ].split( "/" );
-               if ( folder1 == null )
+               if ( this.folder1 == null )
                {
-                  folder1 = SpriteMatriz( direc, Integer.parseInt( t1[ 0 ] ), Integer.parseInt( t1[ 1 ] ) );
-               } else if ( folder2 == null )
+                  this.folder1 = SpriteMatriz( direc, Integer.parseInt( t1[ 0 ] ), Integer.parseInt( t1[ 1 ] ) );
+               } else if ( this.folder2 == null )
                {
-                  folder2 = SpriteMatriz( direc, Integer.parseInt( t1[ 0 ] ), Integer.parseInt( t1[ 1 ] ) );
-               } else if ( folder3 == null )
+                  this.folder2 = SpriteMatriz( direc, Integer.parseInt( t1[ 0 ] ), Integer.parseInt( t1[ 1 ] ) );
+               } else if ( this.folder3 == null )
                {
                   folder3 = SpriteMatriz( direc, Integer.parseInt( t1[ 0 ] ), Integer.parseInt( t1[ 1 ] ) );
                }
 
                break;
             case "BG":
-               fundo = SpriteUpdate( imgPath + "terreno\\fundo\\" + temp[ 1 ] );
+               this.fundo = SpriteUpdate( imgPath + "terreno\\fundo\\" + temp[ 1 ] );
                break;
 
             case "EE":
@@ -67,7 +66,7 @@ public class level
 
             case "AA":
                // mapa de sprites
-               mapa = new BufferedImage[ 12 ][ 16 ];
+               this.mapa = new BufferedImage[ 12 ][ 16 ];
                int line = 0,
                 col = 0;
                linha = buffer.readLine();
@@ -86,15 +85,15 @@ public class level
                      switch ( t1[ 0 ] )
                      {
                         case "1":
-                           mapa[ line ][ col ] = folder1[ alfaNum.indexOf( t1[ 1 ] ) ][ Integer.parseInt( t1[ 2 ] ) ];
+                           this.mapa[ line ][ col ] = this.folder1[ alfaNum.indexOf( t1[ 1 ] ) ][ Integer.parseInt( t1[ 2 ] ) ];
                            col ++;
                            break;
                         case "2":
-                           mapa[ line ][ col ] = folder2[ alfaNum.indexOf( t1[ 1 ] ) ][ Integer.parseInt( t1[ 2 ] ) ];
+                           this.mapa[ line ][ col ] = this.folder2[ alfaNum.indexOf( t1[ 1 ] ) ][ Integer.parseInt( t1[ 2 ] ) ];
                            col ++;
                            break;
                         case "3":
-                           mapa[ line ][ col ] = folder3[ alfaNum.indexOf( t1[ 1 ] ) ][ Integer.parseInt( t1[ 2 ] ) ];
+                           this.mapa[ line ][ col ] = this.folder3[ alfaNum.indexOf( t1[ 1 ] ) ][ Integer.parseInt( t1[ 2 ] ) ];
                            col ++;
                            break;
                      }
@@ -117,7 +116,7 @@ public class level
                   col = 0;
                   for ( String elem : temp )
                   {
-                     colisores[ line ][ col ] = Integer.parseInt( elem );
+                     this.colisores[ line ][ col ] = Integer.parseInt( elem );
                      col ++;
                   }
                   line ++;
