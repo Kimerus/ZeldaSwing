@@ -80,6 +80,8 @@ public class Link {
         }else{
             dano = false;
         }
+        
+//        if(this.hitBox.Colidiu(jogo.lvAtual.ColideCheck()))
 
 
 //        if (y+ya > jogo.getHeight() - 50){
