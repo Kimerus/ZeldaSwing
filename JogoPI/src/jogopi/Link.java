@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class Link {
 
-    int x = 50;
+    int x = 200;
     int y = 500;
     int xa = 0;
     int ya = 0;
@@ -15,7 +15,7 @@ public class Link {
             bomba = false,
             arco = false;
     
-    int bombas = -1, flechas = -1;
+    int bombas = 0, flechas = 0;
     
     boolean up = false,
             down = false,
@@ -24,6 +24,8 @@ public class Link {
             
             dano = false;
     Jogo jogo;
+    
+    Colisor hitBox = new Colisor(this.x,this.y,50,50,true);
     
 
     public Link(Jogo jogo) {

@@ -262,36 +262,35 @@ public class Jogo extends JPanel implements KeyListener
             break;
       }
 
-      switch ( link.bombas )
-      {
-         case -1:    //Não equipado
-            spriteBomba = SpriteUpdate( imgPath + "bomb_-1.png" );   //atualiza o sprite
-            g.drawImage( spriteBomba, this.getWidth() - 150, 0, this );
-            break;
-         case 0:     //Equipado mas sem bombas
-            spriteBomba = SpriteUpdate( imgPath + "bomb_0.png" );   //atualiza o sprite
-            g.drawImage( spriteBomba, this.getWidth() - 150, 0, this );
-            break;
-         default:    //equipado com bombas > 0
-            spriteBomba = SpriteUpdate( imgPath + "bomb_1.png" );   //atualiza o sprite
-            g.drawImage( spriteBomba, this.getWidth() - 150, 0, this );
-            break;
+      if(link.bomba){
+        switch ( link.bombas )
+        {
+           case 0:     //Equipado mas sem bombas
+              spriteBomba = SpriteUpdate( imgPath + "bomb_-1.png" );   //atualiza o sprite
+              g.drawImage( spriteBomba, this.getWidth() - 150, 0, this );
+              break;
+           default:    //equipado com bombas > 0
+              spriteBomba = SpriteUpdate( imgPath + "bomb_1.png" );   //atualiza o sprite
+              g.drawImage( spriteBomba, this.getWidth() - 150, 0, this );
+              break;
+        }
       }
-
-      switch ( link.flechas )
-      {
-         case -2:    //bumerangue
-            spriteFlecha = SpriteUpdate( imgPath + "Bumerang_1.png" );
-            g.drawImage( spriteFlecha, this.getWidth() / 2, 0, this );
-            break;
-         case -1:     //nao equipado
-            spriteFlecha = SpriteUpdate( imgPath + "arrow_-1.png" );
-            g.drawImage( spriteFlecha, this.getWidth() / 2, 0, this );
-            break;
-         default:
-            spriteFlecha = SpriteUpdate( imgPath + "arrow_1.png" );
-            g.drawImage( spriteFlecha, this.getWidth() / 2, 0, this );
-            break;
+      if(link.arco){
+        switch ( link.flechas )
+        {
+           case 0:     //sem flechas
+              spriteFlecha = SpriteUpdate( imgPath + "arrow_-1.png" );
+              g.drawImage( spriteFlecha, this.getWidth() / 2, 0, this );
+              break;
+           default:
+              spriteFlecha = SpriteUpdate( imgPath + "arrow_1.png" );
+              g.drawImage( spriteFlecha, this.getWidth() / 2, 0, this );
+              break;
+        }
+      }
+      if(link.bumerangue){
+          spriteFlecha = SpriteUpdate( imgPath + "Bumerang_1.png" );
+              g.drawImage( spriteFlecha, this.getWidth() / 2, 0, this );
       }
    }
 
