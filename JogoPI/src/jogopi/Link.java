@@ -1,39 +1,38 @@
 package jogopi;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class Link {
 
-    int x = 200;
-    int y = 500;
+    int x = 400;
+    int y = 300;
     int xa = 0;
     int ya = 0;
-    
+
     int vida = 3;
-    
+
     boolean bumerangue = false,
             bomba = false,
             arco = false;
-    
+
     int bombas = 0, flechas = 0;
-    
+
     boolean up = false,
             down = false,
             left = false,
             right = false,
-            
             dano = false;
     Jogo jogo;
-    
-    Colisor hitBox = new Colisor(this.x,this.y,50,50,true);
-    
+
+    Colisor hitBox = new Colisor(this.x, this.y, 50, 50, true);
 
     public Link(Jogo jogo) {
         this.jogo = jogo;
     }
 
     public void paint(Graphics2D g) {
-        g.setColor(Color.YELLOW);
+        g.setColor(Color.black);
         g.fillOval(x, y, 50, 50);
     }
 
@@ -41,7 +40,7 @@ public class Link {
         return new Rectangle(x, y, 50, 50);
     }
 
-    public void move() {
+    public void move() throws IOException {
         //System.out.println("up:" + up + " down:" + down + " left:" + left + " right:" + right);
 
         if (right) {
@@ -67,33 +66,50 @@ public class Link {
         if (!up && !down) {
             ya = 0;
         }
-        
+
         if (vida == 0) {
             jogo.gameOver();
         }
 
-        if (collision()) {
-            if (!dano) {
-                vida--;
-                dano = true;
-            }
-        }else{
-            dano = false;
-        }
-        
-//        if(this.hitBox.Colidiu(jogo.lvAtual.ColideCheck()))
-
-
-//        if (y+ya > jogo.getHeight() - 50){
-//            jogo.gameOver();
-//        }
         x += xa;
         y += ya;
+        
+        this.hitBox.UpdatePos(x, y);
+        
+        for (Colisor[] c : jogo.lvAtual.paredes) {
+            for (Colisor col : c) {
+                if (this.hitBox.Colidiu(col)) {
+                    if (col.isSolido()) {
+                        if (this.up || this.down) {
+                            y -= ya;
+                        }
+                        
+                        if (this.left || this.right) {
+                            x -= xa;
+                        }
+                    }
+                    if(col.transition())
+                    {
+                        int side = -1;
+                        if(y < 50){
+                            side = 0;
+                        }
+                        if(x > 700){
+                            side = 1;
+                        }
+                        if(y > 550){
+                            side = 2;
+                        }
+                        if(x < 50){
+                            side = 3;
+                        }
+//                        System.out.println(side);
+                        jogo.lvAtual = new level(jogo, col.Destino(), side);
+                    }
+                }
+            }
+        }
 
-    }
-
-    private boolean collision() {
-        return this.getBounds().intersects(jogo.getBounds());
     }
 
 }

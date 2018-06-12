@@ -43,13 +43,13 @@ public class Jogo extends JPanel implements KeyListener
 
    }
 
-   @Override
-   public Rectangle getBounds()
-   {
-      return new Rectangle( 790, 2, 1, 596 );
-   }
+//   @Override
+//   public Rectangle getBounds()
+//   {
+//      return new Rectangle( 790, 2, 1, 596 );
+//   }
 
-   public void move()
+   public void move() throws IOException
    {
       link.move();
    }
@@ -101,7 +101,7 @@ public class Jogo extends JPanel implements KeyListener
 
       if ( pause == 'p' )
       {
-         switch ( e.getKeyChar() )
+         switch ( e.getKeyChar() )  //comandos do menu de pause
          {
             case 's':
                pauseSelect += 2;
@@ -185,8 +185,9 @@ public class Jogo extends JPanel implements KeyListener
 
       DrawBG( g );
       link.paint( g2d );
-      g2d.setColor( Color.pink );
-      g2d.fillRect( 790, 2, 1, 596 );
+//      g2d.setColor( Color.pink );
+//      g2d.fillRect( 790, 2, 1, 596 );
+          
       if ( pause == 'p' )
       {
          g2d.setColor( Color.blue );
@@ -197,7 +198,7 @@ public class Jogo extends JPanel implements KeyListener
       HUD( g );
    }
 
-   public void run()
+   public void run() throws IOException
    {
       while ( true )
       {
@@ -213,7 +214,6 @@ public class Jogo extends JPanel implements KeyListener
          } else if ( pause == 'j' )
          {
             this.move();
-            //this.HUD();
             this.repaint();
             try
             {
@@ -367,4 +367,5 @@ public class Jogo extends JPanel implements KeyListener
          posY += 50;
       }
    }
+   
 }

@@ -22,7 +22,9 @@ public class level {
     public BufferedImage[][] mapa;
     public BufferedImage fundo;
     private int[][] colisores = new int[12][16]; //linha - coluna
-    private Colisor[][] paredes = new Colisor[12][16];
+    public Colisor[][] paredes = new Colisor[12][16];
+    
+    private String id6, id7, id8, id9, id10;
 
     public String Nome;
 
@@ -94,6 +96,22 @@ public class level {
                     }
 
                     break;
+                    
+                case "6":
+                    id6 = temp[1];
+                    break;
+                case "7":
+                    id6 = temp[1];
+                    break;
+                case "8":
+                    id6 = temp[1];
+                    break;
+                case "9":
+                    id6 = temp[1];
+                    break;
+                case "10":
+                    id6 = temp[1];
+                    break;
 
                 case "00":
                     //mapa de colisão
@@ -118,6 +136,129 @@ public class level {
         }
     }
 
+    public level(Jogo jogo, String area, int side) throws FileNotFoundException, IOException {
+        AlfaNumInit();
+        String linha, temp[];
+
+        this.Nome = area;
+
+        FileReader file = new FileReader(filePath + area + ".txt");
+        BufferedReader buffer = new BufferedReader(file);
+        linha = buffer.readLine();
+        while (linha != null) //leitura do arquivo
+        {
+            temp = linha.split(" ");
+            switch (temp[0]) {
+                case "FF":
+                    String direc = temp[1];
+                    String t1[] = temp[2].split("/");
+                    if (this.folder1 == null) {
+                        this.folder1 = SpriteMatriz(direc, Integer.parseInt(t1[0]), Integer.parseInt(t1[1]));
+                    } else if (this.folder2 == null) {
+                        this.folder2 = SpriteMatriz(direc, Integer.parseInt(t1[0]), Integer.parseInt(t1[1]));
+                    } else if (this.folder3 == null) {
+                        this.folder3 = SpriteMatriz(direc, Integer.parseInt(t1[0]), Integer.parseInt(t1[1]));
+                    }
+
+                    break;
+                case "BG":
+                    this.fundo = SpriteUpdate(imgPath + "terreno\\fundo\\" + temp[1]);
+                    break;
+
+                case "EE":
+                    //adiciona sprite especial
+                    break;
+
+                case "AA":
+                    // mapa de sprites
+                    this.mapa = new BufferedImage[12][16];
+                    int line = 0,
+                     col = 0;
+                    linha = buffer.readLine();
+                    while (!"AA".equals(linha)) {
+                        temp = linha.split(" ");
+                        col = 0;
+                        for (String elem : temp) {
+                            if ("0".equals(elem)) {
+                                col++;
+                                continue;
+                            }
+                            t1 = elem.split("-");
+                            switch (t1[0]) {
+                                case "1":
+                                    this.mapa[line][col] = this.folder1[alfaNum.indexOf(t1[1])][Integer.parseInt(t1[2])];
+                                    col++;
+                                    break;
+                                case "2":
+                                    this.mapa[line][col] = this.folder2[alfaNum.indexOf(t1[1])][Integer.parseInt(t1[2])];
+                                    col++;
+                                    break;
+                                case "3":
+                                    this.mapa[line][col] = this.folder3[alfaNum.indexOf(t1[1])][Integer.parseInt(t1[2])];
+                                    col++;
+                                    break;
+                            }
+                        }
+                        line++;
+                        linha = buffer.readLine();
+                    }
+
+                    break;
+                    
+                case "6":
+                    id6 = temp[1];
+                    break;
+                case "7":
+                    id6 = temp[1];
+                    break;
+                case "8":
+                    id6 = temp[1];
+                    break;
+                case "9":
+                    id6 = temp[1];
+                    break;
+                case "10":
+                    id6 = temp[1];
+                    break;
+
+                case "00":
+                    //mapa de colisão
+                    line = 0;
+                    col = 0;
+
+                    linha = buffer.readLine();
+                    while (!"00".equals(linha)) {
+                        temp = linha.split(" ");
+                        col = 0;
+                        for (String elem : temp) {
+                            this.colisores[line][col] = Integer.parseInt(elem);
+                            col++;
+                        }
+                        line++;
+                        linha = buffer.readLine();
+                    }
+                    CriarParedes(this.colisores);
+                    break;
+            }
+            linha = buffer.readLine();
+        }
+        
+        switch (side) {
+            case 0:
+                jogo.link.y = 550;
+                break;
+            case 1:
+                jogo.link.x = 60;
+                break;
+            case 2:
+                jogo.link.y = 50;
+                break;
+            case 3:
+                jogo.link.x = 700;
+                break;
+        }
+    }
+    
     private BufferedImage[][] SpriteMatriz(String pasta, int qtdPasta, int qtdSprite) {
         BufferedImage[][] matriz;
         matriz = new BufferedImage[qtdPasta][qtdSprite];
@@ -174,58 +315,73 @@ public class level {
 
     private void CriarParedes(int[][] colisores) {
         int posX = 0, posY = 0;
-        for (int i = 0; i < colisores.length; i++) {
-            for (int j = 0; j < colisores[0].length; j++) {
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 16; j++) {
                 switch (colisores[i][j]) {
                     case 0: //vazio
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
+                        posX += 50;
                         break;
                     case 1: //cheio
                         this.paredes[i][j] = new Colisor(posX, posY, 50, 50, true);
-                        posY += 50;
+                        posX += 50;
                         break;
                     case 2: //meio acima
                         this.paredes[i][j] = new Colisor(posX, posY, 50, 25, true);
-                        posY += 50;
+                        posX += 50;
                         break;
                     case 3: //meio abaixo
                         this.paredes[i][j] = new Colisor(posX, posY + 25, 50, 25, true);
-                        posY += 50;
+                        posX += 50;
                         break;
                     case 4: //meio esquerda
                         this.paredes[i][j] = new Colisor(posX, posY, 25, 50, true);
-                        posY += 50;
+                        posX += 50;
                         break;
                     case 5: //meio direita
                         this.paredes[i][j] = new Colisor(posX + 25, posY, 25, 50, true);
-                        posY += 50;
+                        posX += 50;
                         break;
 
                     //casos especiais \/\/\/ //
                     case 6:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        String t1[] = id6.split(",");
+                        this.paredes[i][j] = new Colisor(posX, posY, Integer.parseInt(t1[1]), Integer.parseInt(t1[2]), false, t1[0]);
+                        posX += 50;
                         break;
                     case 7:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false, id7);
+                        posX += 50;
                         break;
                     case 8:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false, id8);
+                        posX += 50;
                         break;
                     case 9:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false, id9);
+                        posX += 50;
                         break;
                     case 10:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false, id10);
+                        posX += 50;
                         break;
                 }
             }
-            posX += 50;
-            posY = 0;
+            posY += 50;
+            posX = 0;
         }
+    }
+
+    public Colisor WallCheck(Colisor obj) {
+        for (int line = 0; line < this.paredes.length; line++) {
+            for (int colu = 0; colu < this.paredes[0].length; colu++) {
+                if (this.paredes[line][colu].Colidiu(obj)) {
+                    System.out.println(this.paredes[line][colu].getPosX() + " " + this.paredes[line][colu].getPosY());
+                    return this.paredes[line][colu];
+                }
+            }
+        }
+
+        return null;
     }
 }
