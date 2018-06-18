@@ -22,22 +22,37 @@ public class level {
     public BufferedImage[][] mapa;
     public BufferedImage fundo;
     private int[][] colisores = new int[12][16]; //linha - coluna
-    private Colisor[][] paredes = new Colisor[12][16];
+    public Colisor[][] paredes = new Colisor[12][16];
+
+    public Colisor[] objs, enemys;
+
+    public ArrayList<Interativos> interact;
+
+    public Sprite[] extras = new Sprite[50];
+
+    private String id6, id7, id8, id9, id10;
 
     public String Nome;
+    private Jogo jogo;
 
-    public level(Jogo jogo, String area) throws FileNotFoundException, IOException {
+    public level(Jogo jogo, String area, int side) throws FileNotFoundException, IOException {
         AlfaNumInit();
         String linha, temp[];
 
+        this.jogo = jogo;
         this.Nome = area;
+
+        this.interact = new ArrayList<>();
 
         FileReader file = new FileReader(filePath + area + ".txt");
         BufferedReader buffer = new BufferedReader(file);
         linha = buffer.readLine();
+
+        int cont = 0;
         while (linha != null) //leitura do arquivo
         {
             temp = linha.split(" ");
+
             switch (temp[0]) {
                 case "FF":
                     String direc = temp[1];
@@ -56,7 +71,11 @@ public class level {
                     break;
 
                 case "EE":
-                    //adiciona sprite especial
+                    t1 = temp[1].split(",");
+                    if (extras[cont] == null) {
+                        extras[cont] = new Sprite(t1[0], Integer.parseInt(t1[1]), Integer.parseInt(t1[2]), Integer.parseInt(t1[3]), Integer.parseInt(t1[4]));
+                        cont++;
+                    }
                     break;
 
                 case "AA":
@@ -95,6 +114,22 @@ public class level {
 
                     break;
 
+                case "6":
+                    id6 = temp[1];
+                    break;
+                case "7":
+                    id7 = temp[1];
+                    break;
+                case "8":
+                    id8 = temp[1];
+                    break;
+                case "9":
+                    id9 = temp[1];
+                    break;
+                case "10":
+                    id10 = temp[1];
+                    break;
+
                 case "00":
                     //mapa de colisão
                     line = 0;
@@ -113,8 +148,28 @@ public class level {
                     }
                     CriarParedes(this.colisores);
                     break;
+
+                case "DROP":
+                    t1 = temp[1].split(",");
+
+                    interact.add(new Drop(Integer.parseInt(t1[0]), Integer.parseInt(t1[1]), this.jogo));
             }
             linha = buffer.readLine();
+        }
+
+        switch (side) {
+            case 0:
+                jogo.link.y = 450;
+                break;
+            case 1:
+                jogo.link.x = 75;
+                break;
+            case 2:
+                jogo.link.y = 100;
+                break;
+            case 3:
+                jogo.link.x = 650;
+                break;
         }
     }
 
@@ -174,58 +229,98 @@ public class level {
 
     private void CriarParedes(int[][] colisores) {
         int posX = 0, posY = 0;
-        for (int i = 0; i < colisores.length; i++) {
-            for (int j = 0; j < colisores[0].length; j++) {
+        String t1[];
+        for (int i = 0; i < 12; i++) {
+            for (int j = 0; j < 16; j++) {
                 switch (colisores[i][j]) {
                     case 0: //vazio
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false, "vazio", this.jogo);
+                        posX += 50;
                         break;
                     case 1: //cheio
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, true);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, true, "vazio", this.jogo);
+                        posX += 50;
                         break;
                     case 2: //meio acima
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 25, true);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 25, true, "vazio", this.jogo);
+                        posX += 50;
                         break;
                     case 3: //meio abaixo
-                        this.paredes[i][j] = new Colisor(posX, posY + 25, 50, 25, true);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY + 25, 50, 25, true, "vazio", this.jogo);
+                        posX += 50;
                         break;
                     case 4: //meio esquerda
-                        this.paredes[i][j] = new Colisor(posX, posY, 25, 50, true);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 25, 50, true, "vazio", this.jogo);
+                        posX += 50;
                         break;
                     case 5: //meio direita
-                        this.paredes[i][j] = new Colisor(posX + 25, posY, 25, 50, true);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX + 25, posY, 25, 50, true, "vazio", this.jogo);
+                        posX += 50;
                         break;
 
                     //casos especiais \/\/\/ //
                     case 6:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        t1 = id6.split(",");
+                        this.paredes[i][j] = new Colisor(posX, posY, Integer.parseInt(t1[1]), Integer.parseInt(t1[2]), false, t1[0], this.jogo);
+                        posX += 50;
                         break;
                     case 7:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        t1 = id7.split(",");
+                        this.paredes[i][j] = new Colisor(posX, posY, Integer.parseInt(t1[1]), Integer.parseInt(t1[2]), false, t1[0], this.jogo);
+                        posX += 50;
                         break;
                     case 8:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        t1 = id8.split(",");
+                        this.paredes[i][j] = new Colisor(posX, posY, Integer.parseInt(t1[1]), Integer.parseInt(t1[2]), false, t1[0], this.jogo);
+                        posX += 50;
                         break;
                     case 9:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        t1 = id9.split(",");
+                        this.paredes[i][j] = new Colisor(posX, posY, Integer.parseInt(t1[1]), Integer.parseInt(t1[2]), false, t1[0], this.jogo);
+                        posX += 50;
                         break;
                     case 10:
-                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false);
-                        posY += 50;
+                        this.paredes[i][j] = new Colisor(posX, posY, 50, 50, false, id10, this.jogo);
+                        posX += 50;
                         break;
                 }
             }
-            posX += 50;
-            posY = 0;
+            posY += 50;
+            posX = 0;
+        }
+    }
+
+    public Colisor WallCheck(Colisor obj) {
+        for (int line = 0; line < this.paredes.length; line++) {
+            for (int colu = 0; colu < this.paredes[0].length; colu++) {
+                if (this.paredes[line][colu].Colidiu(obj)) {
+                    System.out.println(this.paredes[line][colu].getPosX() + " " + this.paredes[line][colu].getPosY());
+                    return this.paredes[line][colu];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    void run()/* funções do mapa ex: inimigos/itens/etc. */ {
+        if (!this.interact.isEmpty()) {
+            for (Interativos obj : this.interact) {
+                if (obj.existe) {
+                    obj.Interact();
+                }
+            }
+            
+            //limpa arraylist
+            int i = 0;
+            for (Interativos obj : this.interact) {
+                if(i > 0){
+                    this.interact.remove(i);
+                }
+                if(!obj.existe){
+                  i = this.interact.indexOf(obj);
+                }
+            }
         }
     }
 }
