@@ -1,23 +1,21 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package jogopi;
 
 import java.awt.*;
-import java.io.IOException;
 
 public class Link {
 
-    int x = 400;
-    int y = 300;
+    int x = 50;
+    int y = 500;
     int xa = 0;
     int ya = 0;
-
     int vida = 3;
-
-    boolean bumerangue = false,
-            bomba = false,
-            arco = false;
-
-    int bombas = 0, flechas = 0;
-
+    int bombas = -1;
+    int flechas = -1;
     boolean up = false,
             down = false,
             left = false,
@@ -25,18 +23,12 @@ public class Link {
             dano = false;
     Jogo jogo;
 
-    public int rupies = 0;
-    
-    char lastDirec;
-
     public Link(Jogo jogo) {
         this.jogo = jogo;
     }
 
-    Colisor hitBox = new Colisor(this.x, this.y, 50, 50, true,"link", this.jogo);
-    
     public void paint(Graphics2D g) {
-        g.setColor(Color.black);
+        g.setColor(Color.YELLOW);
         g.fillOval(x, y, 50, 50);
     }
 
@@ -44,26 +36,20 @@ public class Link {
         return new Rectangle(x, y, 50, 50);
     }
 
-    public void move() throws IOException {
-        //System.out.println("up:" + up + " down:" + down + " left:" + left + " right:" + right);
-
+    public void move() {
         if (right) {
-            lastDirec = 'r';
             this.xa = 2;
         }
 
         if (left) {
-            lastDirec = 'l';
             xa = -2;
         }
 
         if (down) {
-            lastDirec = 'd';
             this.ya = 2;
         }
 
         if (up) {
-            lastDirec = 'u';
             ya = -2;
         }
 
@@ -79,47 +65,18 @@ public class Link {
             jogo.gameOver();
         }
 
-        x += xa;
-        y += ya;
-        this.hitBox.UpdatePos(x, y);
-        
-        for (Colisor[] c : jogo.lvAtual.paredes) {
-            for (Colisor col : c) {
-                if (this.hitBox.Colidiu(col)) {
-                    if (col.isSolido()) {
-                        if (this.up || this.down) {
-                            y -= ya;
-                        }
-                        
-                        if (this.left || this.right) {
-                            x -= xa;
-                        }
-                    }
-                    if(col.transition())
-                    {
-                        int side = -1;
-                        if(y < 50){
-                            side = 0;
-                        }
-                        if(x > 700){
-                            side = 1;
-                        }
-                        if(y > 500){
-                            side = 2;
-                        }
-                        if(x < 50){
-                            side = 3;
-                        }
-//                        System.out.println(side);
-                        jogo.lvAtual = new level(jogo, col.Destino(), side);
-                    }
-                }
+        if (jogo.collision()) {
+            if (!dano) {
+                vida--;
+                dano = true;
             }
+        } else {
+            dano = false;
         }
 
+        x += xa;
+        y += ya;
+
     }
 
-    public void Dano(int i){
-        
-    }
 }
